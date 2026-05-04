@@ -41,7 +41,7 @@ export default function Home() {
 
           <div className="glass-panel delay-3 fade-in info-panel">
             <p className="description">
-              A premium Tequila & Mezcal mobile bar experience, coming soon to Boracay Island, Aklan. We craft our drinks with fresh local fruits, handmade syrups, and an absolute passion for agave.
+              A premium mobile bar experience, coming soon to Boracay Island, Aklan. We craft our drinks with fresh local fruits, handmade syrups, and an absolute passion for our craft.
             </p>
             
             <div className="bartender-profile">
