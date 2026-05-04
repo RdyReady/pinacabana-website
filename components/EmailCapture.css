@@ -1,0 +1,49 @@
+.email-capture-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 400px;
+  width: 100%;
+}
+
+.email-input {
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-light-glass);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-sandy-white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.email-input::placeholder {
+  color: rgba(249, 246, 240, 0.5);
+}
+
+.email-input:focus {
+  border-color: var(--color-pineapple-gold);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 4px rgba(242, 201, 76, 0.2);
+}
+
+.success-message {
+  color: var(--color-pineapple-gold);
+  font-weight: 500;
+  text-align: center;
+  margin-top: var(--space-sm);
+  font-size: 1.1rem;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@media (min-width: 640px) {
+  .email-capture-form {
+    flex-direction: row;
+    max-width: 500px;
+  }
+  
+  .email-input {
+    flex: 1;
+  }
+}
