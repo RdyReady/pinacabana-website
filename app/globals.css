@@ -8,6 +8,7 @@
   --color-sunset-orange: #F2994A;
   --color-sandy-white: #F9F6F0;
   --color-charcoal-grey: #2B2B2B;
+  --color-charcoal-deep: #1c1c1c;
   --color-dark-glass: rgba(43, 43, 43, 0.6);
   --color-light-glass: rgba(249, 246, 240, 0.15);
 
@@ -26,6 +27,7 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
+  --radius-xl: 24px;
   --radius-full: 9999px;
 }
 
@@ -35,11 +37,15 @@
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: var(--color-charcoal-grey);
+  background-color: var(--color-charcoal-deep);
   color: var(--color-sandy-white);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -55,6 +61,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.1;
+}
+
+/* Selection */
+::selection {
+  background: rgba(242, 201, 76, 0.35);
+  color: var(--color-sandy-white);
 }
 
 /* Animations */
@@ -86,23 +98,25 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-primary {
   display: inline-block;
-  background-color: var(--color-pineapple-gold);
-  color: var(--color-charcoal-grey);
+  background: linear-gradient(135deg, var(--color-pineapple-gold), var(--color-sunset-orange));
+  color: var(--color-charcoal-deep);
   font-family: var(--font-heading);
   font-weight: 700;
-  padding: 1rem 2.5rem;
+  padding: 1rem 2.25rem;
   border-radius: var(--radius-full);
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
+  font-size: 0.92rem;
+  box-shadow: 0 10px 28px rgba(242, 153, 74, 0.28);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-sunset-orange);
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(242, 153, 74, 0.3);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 36px rgba(242, 153, 74, 0.45);
 }
 
 .glass-panel {
@@ -119,6 +133,36 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
-.delay-1 { animation-delay: 0.2s; }
-.delay-2 { animation-delay: 0.4s; }
-.delay-3 { animation-delay: 0.6s; }
+.delay-1 { animation-delay: 0.15s; }
+.delay-2 { animation-delay: 0.30s; }
+.delay-3 { animation-delay: 0.45s; }
+.delay-4 { animation-delay: 0.60s; }
+.delay-5 { animation-delay: 0.75s; }
+
+/* Scroll-reveal (used by ScrollReveal component) */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+    opacity: 1;
+  }
+  .scroll-reveal {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
