@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '../../../../lib/supabase/server';
 
@@ -19,3 +20,4 @@ export async function GET(request: NextRequest) {
   const failed = new URL('/admin/login?error=callback', url.origin);
   return NextResponse.redirect(failed);
 }
+

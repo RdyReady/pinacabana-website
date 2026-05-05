@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import Link from 'next/link';
 import EventForm from '../EventForm';
 
@@ -16,3 +17,4 @@ export default function NewEventPage() {
     </div>
   );
 }
+

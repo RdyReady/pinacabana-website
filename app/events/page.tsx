@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import Link from 'next/link';
 import EventsView from '../../components/EventsView';
 import { getAvailabilityBlocks, getEventsInRange } from '../../lib/events';
@@ -54,3 +55,4 @@ export default async function EventsPage() {
     </main>
   );
 }
+

@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { createClient } from '../../../lib/supabase/server';
 import type { AvailabilityBlockRow } from '../../../lib/supabase/types';
 import {
@@ -105,3 +106,4 @@ export default async function AvailabilityPage() {
     </div>
   );
 }
+

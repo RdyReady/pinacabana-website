@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import Link from 'next/link';
 import { createClient } from '../../lib/supabase/server';
 import type { EventRow } from '../../lib/supabase/types';
@@ -92,3 +93,4 @@ function EventListItem({ event }: { event: EventRow }) {
     </li>
   );
 }
+
