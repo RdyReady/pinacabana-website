@@ -58,6 +58,25 @@
   justify-content: center;
 }
 
+.sticky-top-bar-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: rgba(249, 246, 240, 0.85);
+  letter-spacing: 0.5px;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-full);
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.sticky-top-bar-link:hover {
+  color: var(--color-pineapple-gold);
+  background: rgba(242, 201, 76, 0.08);
+}
+
 .sticky-top-bar-cta {
   display: inline-flex;
   align-items: center;
@@ -88,6 +107,9 @@
   .sticky-top-bar-cta {
     font-size: 0.72rem;
     padding: 0.5rem 0.85rem;
+  }
+  .sticky-top-bar-link {
+    display: none;
   }
 }
 

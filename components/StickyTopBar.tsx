@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Countdown from './Countdown';
 import { LAUNCH_DATE, IG_URL, IG_HANDLE } from '../lib/constants';
 import './StickyTopBar.css';
@@ -24,6 +25,9 @@ export default function StickyTopBar() {
         <div className="sticky-top-bar-countdown">
           <Countdown target={LAUNCH_DATE} variant="mini" showLabels={true} />
         </div>
+        <Link href="/events" className="sticky-top-bar-link">
+          Calendar
+        </Link>
         <a
           href={IG_URL}
           target="_blank"

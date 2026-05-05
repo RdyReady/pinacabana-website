@@ -5,3 +5,6 @@ export const REY_IG_URL =
   'https://www.instagram.com/reytirement?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==';
 export const REY_IG_HANDLE = '@reytirement';
 export const LOCATION = 'Boracay Island, Aklan · Philippines';
+export const PHONE_DISPLAY = '+63 967 097 2785';
+export const PHONE_TEL = '+639670972785';
+export const EMAIL = 'tawhaiworkplace@gmail.com';
