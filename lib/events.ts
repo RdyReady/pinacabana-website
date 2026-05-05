@@ -21,7 +21,9 @@ export function expandEvent(
   const duration = baseEnd ? baseEnd.getTime() - baseStart.getTime() : 0;
 
   if (!row.recurrence_rule || row.recurrence_rule.kind !== 'weekly') {
-    if (baseStart < windowStart || baseStart > windowEnd) return [];
+    // For multi-day events, check if the event overlaps the window at all
+    const eventEnd = baseEnd ?? baseStart;
+    if (eventEnd < windowStart || baseStart > windowEnd) return [];
     return [
       {
         ...row,

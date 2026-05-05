@@ -4,22 +4,15 @@
   color: var(--color-sandy-white);
 }
 
-.admin-header {
-  background: #161616;
-  border-bottom: 1px solid rgba(242, 201, 76, 0.18);
-  padding: 0.85rem var(--space-sm);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.admin-header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
+/* Inline nav bar (replaces old sticky header) */
+.admin-inline-nav {
   display: flex;
   align-items: center;
   gap: var(--space-md);
   flex-wrap: wrap;
+  padding: 1rem 0;
+  margin-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(242, 201, 76, 0.18);
 }
 
 .admin-brand {
@@ -81,6 +74,46 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: var(--space-md) var(--space-sm);
+}
+
+/* Loading skeleton */
+.admin-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+}
+
+.admin-loading-bar {
+  height: 18px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    rgba(249, 246, 240, 0.04) 0%,
+    rgba(249, 246, 240, 0.1) 50%,
+    rgba(249, 246, 240, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: adminShimmer 1.6s ease-in-out infinite;
+}
+
+.admin-loading-bar.short { width: 45%; }
+.admin-loading-bar.medium { width: 70%; }
+.admin-loading-bar.long { width: 100%; height: 56px; }
+
+.admin-loading-card {
+  background: #161616;
+  border: 1px solid rgba(249, 246, 240, 0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+@keyframes adminShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .admin-page {
@@ -447,7 +480,7 @@
   .admin-recurrence-grid {
     grid-template-columns: 1fr;
   }
-  .admin-header-inner {
+  .admin-inline-nav {
     gap: 0.6rem;
   }
   .admin-nav {

@@ -20,9 +20,9 @@ export default async function AdminLayout({
 
   return (
     <div className="admin-shell">
-      {user && (
-        <header className="admin-header">
-          <div className="admin-header-inner">
+      <div className="admin-content">
+        {user && (
+          <div className="admin-inline-nav">
             <Link href="/admin" className="admin-brand">
               Piña Cabana — Admin
             </Link>
@@ -36,9 +36,9 @@ export default async function AdminLayout({
               <SignOutButton />
             </div>
           </div>
-        </header>
-      )}
-      <div className="admin-content">{children}</div>
+        )}
+        {children}
+      </div>
     </div>
   );
 }

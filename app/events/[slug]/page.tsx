@@ -96,13 +96,20 @@ export default async function EventDetailPage({
 
         {event.photo_url && (
           <div className="event-detail-photo">
-            <Image
-              src={event.photo_url}
-              alt={event.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 880px"
-              priority
-            />
+            <a
+              href={event.photo_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="event-detail-photo-link"
+            >
+              <Image
+                src={event.photo_url}
+                alt={event.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 880px"
+                priority
+              />
+            </a>
           </div>
         )}
 

@@ -9,6 +9,10 @@ export const metadata: Metadata = {
     "Proper cocktails and honest service. A premium mobile cocktail bar opening June 30, 2026 on Boracay Island, Aklan. Weddings · Private Events · Beach & Villa Pop-ups · Brand Activations.",
   keywords:
     "mobile bar Boracay, Boracay cocktails, beach wedding bar, private event bar Aklan, Piña Cabana, bartender Boracay",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
     title: "Piña Cabana — Opening June 30, 2026",
     description:

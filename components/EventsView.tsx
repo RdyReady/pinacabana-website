@@ -57,9 +57,22 @@ export default function EventsView({ occurrences, blocks }: Props) {
   const occurrencesByDay = useMemo(() => {
     const map: Record<string, EventOccurrence[]> = {};
     for (const occ of occurrences) {
-      const key = isoDay(new Date(occ.starts_at));
-      if (!map[key]) map[key] = [];
-      map[key].push(occ);
+      const startDate = new Date(occ.starts_at);
+      const endDate = occ.ends_at ? new Date(occ.ends_at) : startDate;
+
+      // Walk from start date to end date (inclusive) to handle multi-day events
+      const cur = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+      const last = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+      while (cur <= last) {
+        const key = isoDay(cur);
+        if (!map[key]) map[key] = [];
+        // Avoid duplicate entries for the same occurrence on the same day
+        if (!map[key].some((existing) => existing.id === occ.id)) {
+          map[key].push(occ);
+        }
+        cur.setDate(cur.getDate() + 1);
+      }
     }
     return map;
   }, [occurrences]);

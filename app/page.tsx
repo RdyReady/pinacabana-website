@@ -168,7 +168,7 @@ export default function Home() {
                 </div>
                 <div className="rey-mosaic-thumb">
                   <Image
-                    src="/rey/03-pouring.jpg"
+                    src="/rey/03-pouring.jpeg"
                     alt="Rey pouring a cocktail"
                     fill
                     sizes="(max-width: 900px) 50vw, 25vw"

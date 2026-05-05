@@ -73,16 +73,6 @@ export default function EventForm({ event }: Props) {
         </div>
 
         <div className="admin-field">
-          <label htmlFor="slug">URL slug</label>
-          <input
-            id="slug"
-            name="slug"
-            defaultValue={event?.slug ?? ''}
-            placeholder="auto from title if blank"
-          />
-        </div>
-
-        <div className="admin-field">
           <label htmlFor="category">Category</label>
           <select
             id="category"
