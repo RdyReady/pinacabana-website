@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient } from '../../../lib/supabase/client';
+import { createClient, SupabaseConfigError } from '../../../lib/supabase/client';
 import '../admin.css';
 
 export default function LoginForm() {
@@ -18,18 +18,49 @@ export default function LoginForm() {
     e.preventDefault();
     setStatus('signing-in');
     setErrorMsg('');
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
-      password,
-    });
-    if (error) {
+
+    // Hard timeout so the button never spins forever — surfaces the failure.
+    const timeoutMs = 15000;
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(
+        () =>
+          reject(
+            new Error(
+              `Sign-in timed out after ${timeoutMs / 1000}s. Network or env config issue — check DevTools → Network for /auth/v1/token.`
+            )
+          ),
+        timeoutMs
+      )
+    );
+
+    try {
+      const supabase = createClient();
+      const result = await Promise.race([
+        supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
+        timeout,
+      ]);
+      const { error } = result as Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>;
+      if (error) {
+        setStatus('error');
+        setErrorMsg(error.message);
+        return;
+      }
+      router.push(next);
+      router.refresh();
+    } catch (err) {
       setStatus('error');
-      setErrorMsg(error.message);
-      return;
+      if (err instanceof SupabaseConfigError) {
+        setErrorMsg(err.message);
+      } else if (err instanceof Error) {
+        setErrorMsg(err.message);
+      } else {
+        setErrorMsg('Unexpected error during sign-in.');
+      }
+      console.error('[admin/login] sign-in error', err);
     }
-    router.push(next);
-    router.refresh();
   }
 
   return (
