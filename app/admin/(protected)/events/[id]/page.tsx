@@ -1,8 +1,8 @@
-export const runtime = 'edge';
+
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { createClient } from '../../../../lib/supabase/server';
-import type { EventRow } from '../../../../lib/supabase/types';
+import { createClient } from '../../../../../lib/supabase/server';
+import type { EventRow } from '../../../../../lib/supabase/types';
 import EventForm from '../EventForm';
 
 export const dynamic = 'force-dynamic';

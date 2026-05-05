@@ -1,9 +1,9 @@
-export const runtime = 'edge';
+
 import Link from 'next/link';
-import { createClient } from '../../lib/supabase/server';
-import type { EventRow } from '../../lib/supabase/types';
-import { CATEGORY_META } from '../../lib/supabase/types';
-import { formatEventDateLong } from '../../lib/events';
+import { createClient } from '../../../lib/supabase/server';
+import type { EventRow } from '../../../lib/supabase/types';
+import { CATEGORY_META } from '../../../lib/supabase/types';
+import { formatEventDateLong } from '../../../lib/events';
 
 export const dynamic = 'force-dynamic';
 

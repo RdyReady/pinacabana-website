@@ -1,11 +1,11 @@
-export const runtime = 'edge';
-import { createClient } from '../../../lib/supabase/server';
-import type { AvailabilityBlockRow } from '../../../lib/supabase/types';
+
+import { createClient } from '../../../../lib/supabase/server';
+import type { AvailabilityBlockRow } from '../../../../lib/supabase/types';
 import {
   createAvailabilityBlock,
   deleteAvailabilityBlock,
 } from '../events/actions';
-import { formatEventDateLong } from '../../../lib/events';
+import { formatEventDateLong } from '../../../../lib/events';
 
 export const dynamic = 'force-dynamic';
 

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useTransition } from 'react';
-import type { EventRow, EventCategory } from '../../../lib/supabase/types';
+import type { EventRow, EventCategory } from '../../../../lib/supabase/types';
 import { createEvent, deleteEvent, updateEvent } from './actions';
 
 interface Props {
