@@ -44,12 +44,14 @@ export function createServiceClient() {
 
 /**
  * Read-only public client for use in Server Components that don't need a user
- * session (e.g. /events listing). Slightly faster than the cookie-aware client.
+ * session (e.g. /events listing). Returns null if env vars are missing so
+ * callers can degrade to an empty-state instead of crashing the build.
  */
 export function createPublicClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { auth: { persistSession: false, autoRefreshToken: false } }
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createSupabaseClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }

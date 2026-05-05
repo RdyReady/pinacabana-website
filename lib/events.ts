@@ -78,6 +78,8 @@ export async function getEventsInRange(
   end: Date
 ): Promise<EventOccurrence[]> {
   const supabase = createPublicClient();
+  if (!supabase) return [];
+
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -112,6 +114,8 @@ export async function getUpcomingEvents(limit = 3): Promise<EventOccurrence[]> {
  */
 export async function getEventBySlug(slug: string): Promise<EventRow | null> {
   const supabase = createPublicClient();
+  if (!supabase) return null;
+
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -135,6 +139,8 @@ export async function getAvailabilityBlocks(
   end: Date
 ): Promise<AvailabilityBlockRow[]> {
   const supabase = createPublicClient();
+  if (!supabase) return [];
+
   const { data, error } = await supabase
     .from('availability_blocks')
     .select('*')

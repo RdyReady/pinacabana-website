@@ -1,6 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import './page.css';
+
+// Render on each request so Supabase env vars resolve at runtime, not build time.
+export const dynamic = 'force-dynamic';
+
 import logoImg from '../public/logo.jpg';
 import HeroVideo from '../components/HeroVideo';
 import Countdown from '../components/Countdown';
