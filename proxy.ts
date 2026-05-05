@@ -31,7 +31,10 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
+  const adminEmails = (process.env.ADMIN_EMAILS ?? '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
 
   // Gate /admin routes (except /admin/login and /admin/auth/*).
   const isProtectedAdmin =
@@ -46,11 +49,9 @@ export async function proxy(request: NextRequest) {
       url.searchParams.set('next', path);
       return NextResponse.redirect(url);
     }
-    if (
-      adminEmail &&
-      user.email?.toLowerCase() !== adminEmail
-    ) {
-      // Logged-in but not the allowlisted admin: bounce home.
+    const email = user.email?.toLowerCase() ?? '';
+    if (adminEmails.length > 0 && !adminEmails.includes(email)) {
+      // Logged-in but not on the allowlist: bounce home.
       const url = request.nextUrl.clone();
       url.pathname = '/';
       return NextResponse.redirect(url);
