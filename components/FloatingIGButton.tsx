@@ -1,7 +1,11 @@
+'use client';
+import { usePathname } from 'next/navigation';
 import { IG_URL } from '../lib/constants';
 import './FloatingIGButton.css';
 
 export default function FloatingIGButton() {
+  const pathname = usePathname();
+  if (pathname?.startsWith('/admin')) return null;
   return (
     <a
       href={IG_URL}

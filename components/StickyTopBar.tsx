@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Countdown from './Countdown';
 import { LAUNCH_DATE, IG_URL, IG_HANDLE } from '../lib/constants';
 import './StickyTopBar.css';
 
 export default function StickyTopBar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -14,6 +16,9 @@ export default function StickyTopBar() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Public chrome only — never on /admin routes.
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <div className={`sticky-top-bar ${scrolled ? 'is-scrolled' : ''}`}>

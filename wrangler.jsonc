@@ -2,17 +2,22 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
   "name": "pinacabana-website",
-  "compatibility_date": "2024-12-30",
+  "compatibility_date": "2025-09-23",
   "compatibility_flags": [
-    "nodejs_compat"
+    "nodejs_compat",
+    "global_fetch_strictly_public"
   ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Public env vars — safe to commit. Real values set in Cloudflare dashboard
+  // (Workers & Pages → pinacabana-website → Settings → Variables and Secrets).
+  // Sensitive values (SUPABASE_SERVICE_ROLE_KEY) MUST be added as Secrets, not Vars.
   "vars": {
-    "NEXT_PUBLIC_SUPABASE_URL": "",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "",
-    "ADMIN_EMAILS": ""
+    "NEXT_PUBLIC_SUPABASE_URL": "https://omyrpniruyxuyohwaxhf.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9teXJwbmlydXl4dXlvaHdheGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MTExMjIsImV4cCI6MjA5MzQ4NzEyMn0.YF1Sl0pQU0fWpEAhE2dykaNtY52H-kMEGSITENkkgkA",
+    "ADMIN_EMAILS": "tawhaiworkplace@gmail.com,rodolfoemperado@gmail.com",
+    "NEXT_PUBLIC_SITE_URL": "https://pinacabanaph.com"
   }
 }
