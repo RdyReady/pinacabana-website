@@ -1,11 +1,15 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import type {
-  EventOccurrence,
-  AvailabilityBlockRow,
-} from '../lib/supabase/types';
+import type { EventOccurrence, AvailabilityBlockRow } from '../lib/supabase/types';
 import { CATEGORY_META } from '../lib/supabase/types';
+import {
+  isoDay,
+  monthLabel,
+  buildMonthGrid,
+  buildOccurrencesByDay,
+  buildBlockedDays,
+} from '../lib/calendar';
 import EventCard from './EventCard';
 import './EventsView.css';
 
@@ -15,31 +19,6 @@ interface Props {
 }
 
 type View = 'month' | 'list';
-
-function isoDay(d: Date) {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Manila',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(d);
-}
-
-function startOfMonth(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth(), 1);
-}
-
-function endOfMonth(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth() + 1, 0);
-}
-
-function monthLabel(d: Date) {
-  return new Intl.DateTimeFormat('en-PH', {
-    timeZone: 'Asia/Manila',
-    month: 'long',
-    year: 'numeric',
-  }).format(d);
-}
 
 export default function EventsView({ occurrences, blocks }: Props) {
   const [view, setView] = useState<View>('month');
@@ -54,66 +33,9 @@ export default function EventsView({ occurrences, blocks }: Props) {
     return () => mql.removeEventListener('change', apply);
   }, []);
 
-  const occurrencesByDay = useMemo(() => {
-    const map: Record<string, EventOccurrence[]> = {};
-    for (const occ of occurrences) {
-      const startDate = new Date(occ.starts_at);
-      const endDate = occ.ends_at ? new Date(occ.ends_at) : startDate;
-
-      // Walk from start date to end date (inclusive) to handle multi-day events
-      const cur = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-      const last = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-
-      while (cur <= last) {
-        const key = isoDay(cur);
-        if (!map[key]) map[key] = [];
-        // Avoid duplicate entries for the same occurrence on the same day
-        if (!map[key].some((existing) => existing.id === occ.id)) {
-          map[key].push(occ);
-        }
-        cur.setDate(cur.getDate() + 1);
-      }
-    }
-    return map;
-  }, [occurrences]);
-
-  const blockedDays = useMemo(() => {
-    const set = new Set<string>();
-    for (const b of blocks) {
-      const start = new Date(b.starts_at);
-      const end = new Date(b.ends_at);
-      const cur = new Date(start);
-      while (cur <= end) {
-        set.add(isoDay(cur));
-        cur.setDate(cur.getDate() + 1);
-      }
-    }
-    return set;
-  }, [blocks]);
-
-  const monthDays = useMemo(() => {
-    const start = startOfMonth(cursor);
-    const end = endOfMonth(cursor);
-    const days: Date[] = [];
-    // Pad to start on Sunday
-    const padStart = start.getDay();
-    for (let i = padStart; i > 0; i--) {
-      const d = new Date(start);
-      d.setDate(d.getDate() - i);
-      days.push(d);
-    }
-    for (let i = 1; i <= end.getDate(); i++) {
-      days.push(new Date(cursor.getFullYear(), cursor.getMonth(), i));
-    }
-    // Pad to end on Saturday
-    while (days.length % 7 !== 0) {
-      const last = days[days.length - 1];
-      const d = new Date(last);
-      d.setDate(d.getDate() + 1);
-      days.push(d);
-    }
-    return days;
-  }, [cursor]);
+  const occurrencesByDay = useMemo(() => buildOccurrencesByDay(occurrences), [occurrences]);
+  const blockedDays = useMemo(() => buildBlockedDays(blocks), [blocks]);
+  const monthDays = useMemo(() => buildMonthGrid(cursor), [cursor]);
 
   const today = isoDay(new Date());
 

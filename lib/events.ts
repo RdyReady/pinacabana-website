@@ -1,72 +1,10 @@
 import { createPublicClient } from './supabase/server';
-import type {
-  EventOccurrence,
-  EventRow,
-  AvailabilityBlockRow,
-} from './supabase/types';
+import { expandEvent } from './recurrence';
+import type { EventOccurrence, EventRow, AvailabilityBlockRow } from './supabase/types';
+
+export { expandEvent } from './recurrence';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-/**
- * Expand a single weekly-recurring EventRow into concrete occurrences within a
- * window. Non-recurring events return a single occurrence (the row itself).
- */
-export function expandEvent(
-  row: EventRow,
-  windowStart: Date,
-  windowEnd: Date
-): EventOccurrence[] {
-  const baseStart = new Date(row.starts_at);
-  const baseEnd = row.ends_at ? new Date(row.ends_at) : null;
-  const duration = baseEnd ? baseEnd.getTime() - baseStart.getTime() : 0;
-
-  if (!row.recurrence_rule || row.recurrence_rule.kind !== 'weekly') {
-    // For multi-day events, check if the event overlaps the window at all
-    const eventEnd = baseEnd ?? baseStart;
-    if (eventEnd < windowStart || baseStart > windowEnd) return [];
-    return [
-      {
-        ...row,
-        id: row.id,
-        source_id: row.id,
-        is_recurring_instance: false,
-      },
-    ];
-  }
-
-  const { day_of_week, until } = row.recurrence_rule;
-  const untilDate = new Date(until);
-  untilDate.setHours(23, 59, 59, 999);
-
-  const occurrences: EventOccurrence[] = [];
-
-  // Walk forward week-by-week from the base start until we exit the window or
-  // pass the until-date.
-  let cursor = new Date(baseStart);
-
-  // Snap cursor's day-of-week to the recurrence's day_of_week if needed.
-  while (cursor.getDay() !== day_of_week) {
-    cursor.setDate(cursor.getDate() + 1);
-  }
-
-  while (cursor <= untilDate && cursor <= windowEnd) {
-    if (cursor >= windowStart) {
-      const occStart = new Date(cursor);
-      const occEnd = duration ? new Date(cursor.getTime() + duration) : null;
-      occurrences.push({
-        ...row,
-        id: `${row.id}@${occStart.toISOString().slice(0, 10)}`,
-        source_id: row.id,
-        starts_at: occStart.toISOString(),
-        ends_at: occEnd ? occEnd.toISOString() : null,
-        is_recurring_instance: true,
-      });
-    }
-    cursor = new Date(cursor.getTime() + 7 * DAY_MS);
-  }
-
-  return occurrences;
-}
 
 /**
  * Get all event occurrences within [start, end], including recurrence
@@ -78,7 +16,6 @@ export async function getEventsInRange(
   end: Date
 ): Promise<EventOccurrence[]> {
   const supabase = createPublicClient();
-  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('events')
@@ -114,7 +51,6 @@ export async function getUpcomingEvents(limit = 3): Promise<EventOccurrence[]> {
  */
 export async function getEventBySlug(slug: string): Promise<EventRow | null> {
   const supabase = createPublicClient();
-  if (!supabase) return null;
 
   const { data, error } = await supabase
     .from('events')
@@ -139,7 +75,6 @@ export async function getAvailabilityBlocks(
   end: Date
 ): Promise<AvailabilityBlockRow[]> {
   const supabase = createPublicClient();
-  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('availability_blocks')

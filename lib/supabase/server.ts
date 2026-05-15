@@ -44,14 +44,22 @@ export function createServiceClient() {
 
 /**
  * Read-only public client for use in Server Components that don't need a user
- * session (e.g. /events listing). Returns null if env vars are missing so
- * callers can degrade to an empty-state instead of crashing the build.
+ * session (e.g. /events listing). Throws if env vars are missing rather than
+ * returning null — callers should not silently degrade on misconfiguration.
  */
 export function createPublicClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return createSupabaseClient(url, key, {
+  const missing: string[] = [];
+  if (!url) missing.push('NEXT_PUBLIC_SUPABASE_URL');
+  if (!key) missing.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  if (missing.length) {
+    throw new Error(
+      `Supabase public client missing env: ${missing.join(', ')}. ` +
+        `Add them to the Cloudflare build environment and redeploy.`
+    );
+  }
+  return createSupabaseClient(url!, key!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

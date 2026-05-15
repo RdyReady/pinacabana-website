@@ -2,7 +2,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '../../../../lib/supabase/server';
-import type { EventCategory, RecurrenceRule } from '../../../../lib/supabase/types';
+import { EventDraftSchema, deriveRecurrenceRule } from '../../../../lib/schemas';
 
 function slugify(input: string) {
   return input
@@ -16,55 +16,38 @@ function slugify(input: string) {
     .slice(0, 80);
 }
 
-interface ParsedForm {
-  slug: string;
-  title: string;
-  category: EventCategory;
-  starts_at: string;
-  ends_at: string | null;
-  location_name: string | null;
-  location_url: string | null;
-  description: string | null;
-  is_public: boolean;
-  is_published: boolean;
-  recurrence_rule: RecurrenceRule | null;
-}
+function parseForm(formData: FormData) {
+  const raw = {
+    title: formData.get('title'),
+    category: formData.get('category'),
+    starts_at: formData.get('starts_at'),
+    ends_at: formData.get('ends_at') || '',
+    location_name: formData.get('location_name') || '',
+    location_url: formData.get('location_url') || '',
+    description: formData.get('description') || '',
+    is_public: formData.get('is_public') === 'on',
+    is_published: formData.get('is_published') === 'on',
+    recurrence_kind: formData.get('recurrence_kind') || 'none',
+    recurrence_day_of_week: formData.get('recurrence_day_of_week'),
+    recurrence_until: formData.get('recurrence_until') || undefined,
+  };
 
-function parseForm(formData: FormData): ParsedForm {
-  const title = String(formData.get('title') ?? '').trim();
+  const draft = EventDraftSchema.parse(raw);
   const slugRaw = String(formData.get('slug') ?? '').trim();
-  const slug = slugify(slugRaw || title) || `event-${Date.now()}`;
-  const category = String(formData.get('category') ?? 'popup') as EventCategory;
-  const starts_at = String(formData.get('starts_at') ?? '');
-  const ends_atRaw = String(formData.get('ends_at') ?? '');
-  const ends_at = ends_atRaw ? ends_atRaw : null;
-  const location_name = (formData.get('location_name')?.toString() || '').trim() || null;
-  const location_url = (formData.get('location_url')?.toString() || '').trim() || null;
-  const description = (formData.get('description')?.toString() || '').trim() || null;
-  const is_public = formData.get('is_public') === 'on';
-  const is_published = formData.get('is_published') === 'on';
-
-  const recurrenceKind = String(formData.get('recurrence_kind') ?? 'none');
-  let recurrence_rule: RecurrenceRule | null = null;
-  if (recurrenceKind === 'weekly') {
-    const day_of_week = Number(formData.get('recurrence_day_of_week') ?? -1);
-    const until = String(formData.get('recurrence_until') ?? '');
-    if (day_of_week >= 0 && day_of_week <= 6 && until) {
-      recurrence_rule = { kind: 'weekly', day_of_week, until };
-    }
-  }
+  const slug = slugify(slugRaw || draft.title) || `event-${Date.now()}`;
+  const recurrence_rule = deriveRecurrenceRule(draft);
 
   return {
     slug,
-    title,
-    category,
-    starts_at: new Date(starts_at).toISOString(),
-    ends_at: ends_at ? new Date(ends_at).toISOString() : null,
-    location_name,
-    location_url,
-    description,
-    is_public,
-    is_published,
+    title: draft.title,
+    category: draft.category,
+    starts_at: draft.starts_at,
+    ends_at: draft.ends_at ?? null,
+    location_name: draft.location_name,
+    location_url: draft.location_url,
+    description: draft.description,
+    is_public: draft.is_public,
+    is_published: draft.is_published,
     recurrence_rule,
   };
 }
@@ -94,18 +77,18 @@ async function uploadPhoto(
 }
 
 export async function createEvent(formData: FormData) {
+  let parsed;
+  try {
+    parsed = parseForm(formData);
+  } catch (e: unknown) {
+    return { error: e instanceof Error ? e.message : 'Invalid form data' };
+  }
+
   const supabase = await createClient();
-  const parsed = parseForm(formData);
   const photo_url = await uploadPhoto(formData, parsed.slug);
 
-  const { error } = await supabase.from('events').insert({
-    ...parsed,
-    photo_url,
-  });
-
-  if (error) {
-    return { error: error.message };
-  }
+  const { error } = await supabase.from('events').insert({ ...parsed, photo_url });
+  if (error) return { error: error.message };
 
   revalidatePath('/admin');
   revalidatePath('/events');
@@ -114,21 +97,21 @@ export async function createEvent(formData: FormData) {
 }
 
 export async function updateEvent(id: string, formData: FormData) {
+  let parsed;
+  try {
+    parsed = parseForm(formData);
+  } catch (e: unknown) {
+    return { error: e instanceof Error ? e.message : 'Invalid form data' };
+  }
+
   const supabase = await createClient();
-  const parsed = parseForm(formData);
   const newPhoto = await uploadPhoto(formData, parsed.slug);
 
   const update: Record<string, unknown> = { ...parsed };
   if (newPhoto) update.photo_url = newPhoto;
 
-  const { error } = await supabase
-    .from('events')
-    .update(update)
-    .eq('id', id);
-
-  if (error) {
-    return { error: error.message };
-  }
+  const { error } = await supabase.from('events').update(update).eq('id', id);
+  if (error) return { error: error.message };
 
   revalidatePath('/admin');
   revalidatePath(`/admin/events/${id}`);
