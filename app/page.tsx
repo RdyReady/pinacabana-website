@@ -7,7 +7,6 @@ export const dynamic = 'force-dynamic';
 
 import logoImg from '../public/logo.jpg';
 import HeroVideo from '../components/HeroVideo';
-import Countdown from '../components/Countdown';
 import ScrollReveal from '../components/ScrollReveal';
 import UpcomingEventsStrip from '../components/UpcomingEventsStrip';
 import {
@@ -59,17 +58,13 @@ export default function Home() {
             Proper cocktails and honest service — this level isn&apos;t limited to high-end bars.
           </p>
 
-          <div className="fade-in delay-4 hero-countdown-wrap">
-            <Countdown target={LAUNCH_DATE} variant="large" />
-          </div>
-
           <a
             href={IG_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary hero-cta fade-in delay-5"
+            className="btn-primary hero-cta fade-in delay-4"
           >
-            Follow {IG_HANDLE}
+            Contact us on Instagram
           </a>
 
           <span className="hero-cta-sub fade-in delay-5">
@@ -294,7 +289,6 @@ export default function Home() {
             <div className="footer-launch">
               <span className="footer-launch-label">Opening</span>
               <span className="footer-launch-date">June 30, 2026</span>
-              <Countdown target={LAUNCH_DATE} variant="large" />
             </div>
 
             <div className="footer-meta">
@@ -306,7 +300,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="btn-primary footer-cta"
               >
-                Follow {IG_HANDLE}
+                Contact us on Instagram
               </a>
               <ul className="footer-contact">
                 <li>

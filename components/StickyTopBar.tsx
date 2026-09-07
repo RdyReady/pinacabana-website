@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Countdown from './Countdown';
 import { LAUNCH_DATE, IG_URL, IG_HANDLE } from '../lib/constants';
 import './StickyTopBar.css';
 
@@ -27,9 +26,6 @@ export default function StickyTopBar() {
           <span className="dot" aria-hidden="true" />
           <span className="sticky-top-bar-label-text">Opening June 30, 2026</span>
         </span>
-        <div className="sticky-top-bar-countdown">
-          <Countdown target={LAUNCH_DATE} variant="mini" showLabels={true} />
-        </div>
         <Link href="/events" className="sticky-top-bar-link">
           Calendar
         </Link>

@@ -52,12 +52,6 @@
   50% { opacity: 0.55; transform: scale(0.85); }
 }
 
-.sticky-top-bar-countdown {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
 .sticky-top-bar-link {
   display: inline-flex;
   align-items: center;
@@ -114,9 +108,6 @@
 }
 
 @media (max-width: 560px) {
-  .sticky-top-bar-countdown {
-    display: none;
-  }
   .sticky-top-bar-inner {
     justify-content: space-between;
   }

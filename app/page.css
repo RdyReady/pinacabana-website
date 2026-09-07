@@ -89,14 +89,6 @@
   max-width: 620px;
   line-height: 1.5;
 }
-
-.hero-countdown-wrap {
-  margin-bottom: var(--space-md);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
 .hero-cta {
   margin-bottom: 0.6rem;
 }
